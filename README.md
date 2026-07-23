@@ -88,4 +88,4 @@ llamagui/
 
 ## Licencia
 
-Propio.
+MIT
