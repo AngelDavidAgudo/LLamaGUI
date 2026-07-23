@@ -1,0 +1,28 @@
+# Build outputs
+dist/
+build/
+*.spec.bak
+
+# Runtime generated files
+llama_params_cache.json
+ai_dashboard_config.json
+server_profiles.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
