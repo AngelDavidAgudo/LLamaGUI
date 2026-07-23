@@ -26,7 +26,6 @@ Aplicación de escritorio que combina:
 ## Instalación
 
 ```bash
-cd D:/Python/llamagui
 pip install -r requirements.txt
 ```
 
