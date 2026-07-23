@@ -22,7 +22,7 @@ try:
 except Exception:
     pass
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QLineEdit, QFileDialog,
     QSpinBox, QComboBox, QTextEdit, QGroupBox,
@@ -30,8 +30,8 @@ from PyQt6.QtWidgets import (
     QSizePolicy, QCheckBox, QScrollArea, QFrame, QDoubleSpinBox,
     QMessageBox,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QIcon, QTextCursor
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QIcon, QTextCursor
 
 _original_excepthook = sys.excepthook
 def _global_excepthook(exc_type, exc_value, exc_tb):
@@ -724,7 +724,7 @@ def get_disk_temps():
 # THREADS
 # ============================================================
 class HardwareMonitorThread(QThread):
-    stats_updated = pyqtSignal(dict)
+    stats_updated = Signal(dict)
 
     def __init__(self):
         super().__init__()
@@ -799,8 +799,8 @@ class HardwareMonitorThread(QThread):
 
 
 class WorkerThread(QThread):
-    output_signal = pyqtSignal(str)
-    finished_signal = pyqtSignal(bool)
+    output_signal = Signal(str)
+    finished_signal = Signal(bool)
 
     def __init__(self, command, env=None):
         super().__init__()
@@ -843,7 +843,7 @@ class WorkerThread(QThread):
 # PARAM WIDGET (FIX v3.3.1: conversiones int/float protegidas)
 # ============================================================
 class ParamWidget(QWidget):
-    value_changed = pyqtSignal()
+    value_changed = Signal()
 
     def __init__(self, param, parent=None):
         super().__init__(parent)
