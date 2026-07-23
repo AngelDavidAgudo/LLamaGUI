@@ -6,6 +6,7 @@ binaries = []
 hiddenimports = ['pynvml', 'psutil']
 tmp_ret = collect_all('PySide6')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
+datas += [('app_icon.ico', '.'), ('icono.png', '.')]
 
 
 a = Analysis(
@@ -42,5 +43,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='app_icon.ico',
     uac_admin=True,
 )

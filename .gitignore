@@ -3,6 +3,9 @@ dist/
 build/
 *.spec.bak
 
+# Icon files
+app_icon.ico
+
 # Runtime generated files
 llama_params_cache.json
 ai_dashboard_config.json

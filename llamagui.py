@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 AI Control Panel v3.3.1 - Monitor hardware + Motor inferencia llama.cpp
 Parser dinamico + Modos (Auto/GPU/CPU/Hibrido) + Multi-GPU P100
@@ -1120,9 +1120,9 @@ class UnifiedDashboard(QWidget):
         self.setMinimumSize(1100, 750)
 
         try:
-            _icon_path = "app_icon.ico"
+            _icon_path = "icono.png"
             if getattr(sys, "frozen", False):
-                _icon_path = os.path.join(sys._MEIPASS, "app_icon.ico")
+                _icon_path = os.path.join(sys._MEIPASS, "icono.png")
             elif not os.path.exists(_icon_path):
                 _icon_path = None
             if _icon_path:
@@ -1652,3 +1652,4 @@ if __name__ == "__main__":
         except Exception:
             pass
         sys.exit(1)
+

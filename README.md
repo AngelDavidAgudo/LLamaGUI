@@ -60,7 +60,7 @@ llamagui/
 ├── llamagui.spec         # Spec PyInstaller (producción)
 ├── llamagui_debug.spec   # Spec PyInstaller (debug)
 ├── build.bat             # Script de compilación
-├── app_icon.ico          # Icono de la aplicación
+├── icono.png             # Icono de la aplicación
 ├── requirements.txt      # Dependencias de Python
 ├── .gitignore            # Archivos a excluir del repo
 └── README.md             # Este archivo
