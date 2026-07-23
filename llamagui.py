@@ -1116,7 +1116,7 @@ class UnifiedDashboard(QWidget):
             self.on_profile_changed(0)
 
     def initUI(self):
-        self.setWindowTitle("LLama GUI v3.3.1 - Parser Corregido + Modos")
+        self.setWindowTitle("LLamaGUI v3.3.1")
         self.setMinimumSize(1100, 750)
 
         try:

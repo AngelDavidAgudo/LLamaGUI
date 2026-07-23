@@ -11,7 +11,7 @@ hiddenimports = [
     'PySide6.QtSvg',
 ]
 
-datas = []
+datas = [('icono.png', '.')]
 binaries = []
 
 a = Analysis(

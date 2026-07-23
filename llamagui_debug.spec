@@ -8,7 +8,6 @@ a = Analysis(
     binaries=[],
     datas=[
         ('app_icon.ico', '.'),
-        ('icono.png', '.'),
     ],
     hiddenimports=[
         'PySide6', 'PySide6.QtCore', 'PySide6.QtGui', 'PySide6.QtWidgets',
