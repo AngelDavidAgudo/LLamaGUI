@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 AI Control Panel v3.3.1 - Monitor hardware + Motor inferencia llama.cpp
 Parser dinamico + Modos (Auto/GPU/CPU/Hibrido) + Multi-GPU P100
