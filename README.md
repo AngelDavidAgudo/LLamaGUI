@@ -2,6 +2,10 @@
 
 Panel de control para inferencia de modelos LLM con llama.cpp + monitor de hardware.
 
+
+<img width="2204" height="1560" alt="image" src="https://github.com/user-attachments/assets/6372fba7-9d10-4f4f-ab3d-5e2eedc44dee" />
+
+
 ## Descripción
 
 Aplicación de escritorio que combina:
@@ -22,7 +26,6 @@ Aplicación de escritorio que combina:
 ## Instalación
 
 ```bash
-cd D:/Python/llamagui
 pip install -r requirements.txt
 ```
 
@@ -85,4 +88,3 @@ llamagui/
 ## Licencia
 
 MIT License — ver archivo LICENSE.
-
