@@ -27,8 +27,7 @@ from PySide6.QtWidgets import (
     QPushButton, QLabel, QLineEdit, QFileDialog,
     QSpinBox, QComboBox, QTextEdit, QGroupBox,
     QTabWidget, QInputDialog, QTabBar,
-    QSizePolicy, QCheckBox, QScrollArea, QFrame, QDoubleSpinBox,
-    QMessageBox,
+    QDoubleSpinBox,
 )
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon, QTextCursor
@@ -1187,25 +1186,24 @@ class UnifiedDashboard(QWidget):
         self._console_max_lines = 500
         main.addWidget(self.console, stretch=0)
 
+        tabs_row = QHBoxLayout()
         self.profile_tabs = QTabWidget()
+        self.profile_tabs.currentChanged.connect(self.on_profile_changed)
+        tabs_row.addWidget(self.profile_tabs, stretch=1)
         add_btn = QPushButton("+")
-        add_btn.setFixedSize(25, 25)
+        add_btn.setFixedSize(35, 28)
         add_btn.setStyleSheet(
             "font-size: 16px; font-weight: bold; "
-            "background-color: #333; border: 1px solid #555;"
+            "background-color: #2e7d32; color: #fff; border: none; "
+            "border-radius: 3px;"
         )
+        add_btn.setToolTip("Nuevo Perfil")
         add_btn.clicked.connect(self.add_new_profile)
+        tabs_row.addWidget(add_btn)
+        main.addLayout(tabs_row)
 
         for idx, prof in enumerate(self.profiles):
             self.create_profile_tab(prof.get("name", f"Perfil {idx+1}"), prof)
-
-        last = self.profile_tabs.count() - 1
-        if last >= 0:
-            self.profile_tabs.tabBar().setTabButton(
-                last, QTabBar.ButtonPosition.RightSide, add_btn
-            )
-        self.profile_tabs.currentChanged.connect(self.on_profile_changed)
-        main.addWidget(self.profile_tabs, stretch=1)
 
         ctrl = QHBoxLayout()
         self.btn_start = QPushButton("INICIAR SERVIDOR")
@@ -1223,13 +1221,8 @@ class UnifiedDashboard(QWidget):
         self.btn_stop.setEnabled(False)
         self.btn_stop.clicked.connect(self.stop_server)
 
-        self.btn_save_profile = QPushButton("Guardar Perfil")
-        self.btn_save_profile.setToolTip("Guardar los parametros activados en este perfil")
-        self.btn_save_profile.clicked.connect(self.save_current_profile)
-
         ctrl.addWidget(self.btn_start)
         ctrl.addWidget(self.btn_stop)
-        ctrl.addWidget(self.btn_save_profile)
         main.addLayout(ctrl)
 
         self.setLayout(main)
@@ -1275,16 +1268,7 @@ class UnifiedDashboard(QWidget):
         }
         self.profiles.append(prof)
         save_profiles(self.profiles)
-        old_idx = self.profile_tabs.count() - 1
-        old_btn = self.profile_tabs.tabBar().tabButton(
-            old_idx, QTabBar.ButtonPosition.RightSide
-        ) if old_idx >= 0 else None
         self.create_profile_tab(name, prof)
-        if old_btn:
-            nl = self.profile_tabs.count() - 1
-            self.profile_tabs.tabBar().setTabButton(
-                nl, QTabBar.ButtonPosition.RightSide, old_btn
-            )
         self.profile_tabs.setCurrentIndex(self.profile_tabs.count() - 1)
         self.log(f"Perfil '{name}' creado.")
 
@@ -1322,24 +1306,6 @@ class UnifiedDashboard(QWidget):
         if hasattr(tab, 'current_mode'):
             self.profiles[idx]["mode"] = tab.current_mode
         save_profiles(self.profiles)
-
-    def save_current_profile(self):
-        if self.current_index is not None and 0 <= self.current_index < len(self.profiles):
-            tab = self.profile_tabs.widget(self.current_index)
-            if tab:
-                self._extract_profile_data(tab, self.current_index)
-                name = self.profiles[self.current_index].get("name", "Perfil")
-                params_count = len(self.profiles[self.current_index].get("params", {}))
-                mode = self.profiles[self.current_index].get("mode", "auto")
-                self.log(f"[OK] Perfil '{name}' guardado ({params_count} parametros, modo {mode}).")
-                QMessageBox.information(
-                    self, "Perfil Guardado",
-                    f"Perfil '{name}' guardado correctamente.\n\n"
-                    f"Modo: {mode}\n"
-                    f"Parametros activados: {params_count}\n"
-                    f"Modelo: {self.profiles[self.current_index].get('model_path', 'N/A')}\n"
-                    f"Servidor: {self.profiles[self.current_index].get('server_path', 'N/A')}"
-                )
 
     def apply_mode_to_tab(self, mode, tab):
         if not hasattr(tab, 'params_panel'):
