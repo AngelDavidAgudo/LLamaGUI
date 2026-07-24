@@ -26,8 +26,8 @@ from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QLineEdit, QFileDialog,
     QSpinBox, QComboBox, QTextEdit, QGroupBox,
-    QTabWidget, QInputDialog, QTabBar,
-    QDoubleSpinBox,
+    QTabWidget, QInputDialog,
+    QDoubleSpinBox, QCheckBox, QScrollArea,
 )
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon, QTextCursor
