@@ -3,7 +3,7 @@
 Panel de control para inferencia de modelos LLM con llama.cpp + monitor de hardware.
 
 
-<img width="2204" height="2064" alt="image" src="https://github.com/user-attachments/assets/afd9c839-1b62-4dd9-b62a-8059f729d352" />
+<img width="2204" height="2064" alt="image" src="https://github.com/user-attachments/assets/a0fc66a7-9da4-435c-9df0-0fbb7ac4d975" />
 
 
 ## Descripción
