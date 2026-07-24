@@ -1262,7 +1262,7 @@ class UnifiedDashboard(QWidget):
         plus_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         plus_btn.clicked.connect(self._on_plus_tab_clicked)
         layout.addWidget(plus_btn)
-        self.profile_tabs.addTab(plus_tab, "Nueva")
+        self.profile_tabs.addTab(plus_tab, "+")
 
     def _on_plus_tab_clicked(self):
         if self.profile_tabs.currentWidget() is None:
@@ -1271,8 +1271,8 @@ class UnifiedDashboard(QWidget):
             self, "Nuevo Perfil", "Nombre del perfil:"
         )
         if not (ok and name):
-            # Volver a la ultima pestaña de perfil
-            last_idx = self.profile_tabs.count() - 1
+            # Volver a la ultima pestaña de perfil (no al tab +)
+            last_idx = self.profile_tabs.count() - 2
             if last_idx >= 0:
                 self.profile_tabs.setCurrentIndex(last_idx)
             return
@@ -1321,9 +1321,13 @@ class UnifiedDashboard(QWidget):
         self.log(f"Perfil '{name}' creado.")
 
     def on_profile_changed(self, index):
-        # Ignorar si se clickeo en el tab "+"
+        # Si se clickeó la pestaña "+", abrir diálogo de crear perfil
         if index == self.profile_tabs.count() - 1:
-            return
+            # Verificar si es realmente el tab "+" (no un widget sin params_panel)
+            widget = self.profile_tabs.widget(index)
+            if widget and not hasattr(widget, 'params_panel'):
+                self._on_plus_tab_clicked()
+                return
         if hasattr(self, 'current_index') and self.current_index != index:
             old = self.profile_tabs.widget(self.current_index)
             if old and hasattr(old, 'params_panel'):
