@@ -1186,24 +1186,15 @@ class UnifiedDashboard(QWidget):
         self._console_max_lines = 500
         main.addWidget(self.console, stretch=0)
 
-        tabs_row = QHBoxLayout()
         self.profile_tabs = QTabWidget()
         self.profile_tabs.currentChanged.connect(self.on_profile_changed)
-        tabs_row.addWidget(self.profile_tabs, stretch=1)
-        add_btn = QPushButton("+")
-        add_btn.setFixedSize(35, 28)
-        add_btn.setStyleSheet(
-            "font-size: 16px; font-weight: bold; "
-            "background-color: #2e7d32; color: #fff; border: none; "
-            "border-radius: 3px;"
-        )
-        add_btn.setToolTip("Nuevo Perfil")
-        add_btn.clicked.connect(self.add_new_profile)
-        tabs_row.addWidget(add_btn)
-        main.addLayout(tabs_row)
+        main.addWidget(self.profile_tabs, stretch=1)
 
         for idx, prof in enumerate(self.profiles):
             self.create_profile_tab(prof.get("name", f"Perfil {idx+1}"), prof)
+
+        # Tab "+" siempre al final para crear nuevo perfil
+        self._add_plus_tab()
 
         ctrl = QHBoxLayout()
         self.btn_start = QPushButton("INICIAR SERVIDOR")
@@ -1255,6 +1246,58 @@ class UnifiedDashboard(QWidget):
         else:
             self.log("[ERROR] No se detectaron parametros. Verifica la ruta del servidor.")
 
+    def _add_plus_tab(self):
+        plus_tab = QWidget()
+        plus_tab.setObjectName("plus_tab")
+        layout = QVBoxLayout(plus_tab)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        plus_btn = QPushButton("+")
+        plus_btn.setFixedSize(50, 50)
+        plus_btn.setStyleSheet(
+            "font-size: 28px; font-weight: bold; "
+            "background-color: transparent; "
+            "color: #2e7d32; border: none; "
+            "border-radius: 25px;"
+        )
+        plus_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        plus_btn.clicked.connect(self._on_plus_tab_clicked)
+        layout.addWidget(plus_btn)
+        self.profile_tabs.addTab(plus_tab, "Nueva")
+
+    def _on_plus_tab_clicked(self):
+        if self.profile_tabs.currentWidget() is None:
+            return
+        name, ok = QInputDialog.getText(
+            self, "Nuevo Perfil", "Nombre del perfil:"
+        )
+        if not (ok and name):
+            # Volver a la ultima pestaña de perfil
+            last_idx = self.profile_tabs.count() - 1
+            if last_idx >= 0:
+                self.profile_tabs.setCurrentIndex(last_idx)
+            return
+        prof = {
+            "name": name,
+            "model_path": self.config.get("last_model", ""),
+            "server_path": self.config.get("server_path", DEFAULT_SERVER_PATH),
+            "mode": "auto",
+            "params": {}
+        }
+        self.profiles.append(prof)
+        save_profiles(self.profiles)
+        self.create_profile_tab(name, prof)
+        # Quitar el tab "+" actual y agregarlo al final
+        plus_idx = self.profile_tabs.indexOf(
+            self.profile_tabs.currentWidget()
+        )
+        if plus_idx >= 0:
+            self.profile_tabs.removeTab(plus_idx)
+        self._add_plus_tab()
+        self.profile_tabs.setCurrentIndex(
+            self.profile_tabs.count() - 2
+        )
+        self.log(f"Perfil '{name}' creado.")
+
     def add_new_profile(self):
         name, ok = QInputDialog.getText(self, "Nuevo Perfil", "Nombre del perfil:")
         if not (ok and name):
@@ -1269,10 +1312,18 @@ class UnifiedDashboard(QWidget):
         self.profiles.append(prof)
         save_profiles(self.profiles)
         self.create_profile_tab(name, prof)
-        self.profile_tabs.setCurrentIndex(self.profile_tabs.count() - 1)
+        # Reponer "+" al final
+        plus_idx = self.profile_tabs.count() - 1
+        if plus_idx >= 0:
+            self.profile_tabs.removeTab(plus_idx)
+        self._add_plus_tab()
+        self.profile_tabs.setCurrentIndex(self.profile_tabs.count() - 2)
         self.log(f"Perfil '{name}' creado.")
 
     def on_profile_changed(self, index):
+        # Ignorar si se clickeo en el tab "+"
+        if index == self.profile_tabs.count() - 1:
+            return
         if hasattr(self, 'current_index') and self.current_index != index:
             old = self.profile_tabs.widget(self.current_index)
             if old and hasattr(old, 'params_panel'):
